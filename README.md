@@ -1,0 +1,1 @@
+# Qtec-Django-Developer-Task-May-2023
