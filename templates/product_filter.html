@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <img src="{{ category_data.image.url }}" alt="no image" width="1024" height="250"/>
+</div>
+<div class="container d-flex" id="product-list">
+    <div class="border-end bg-white mt-5" id="sidebar-wrapper">
+        <div class="list-group list-group-flush">
+            <div>
+                <h6> PRICE</h6>
+                <div class="form-row">
+                    <div class="col-4">
+                        <input type="text" class="form-control" :id="min_price" :value="min_price" v-model="min_price"
+                               placeholder="min">
+                    </div>
+                    <div class="col-1">
+                        <label for="toFor"> TO</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" :id="max_price" :value="max_price" v-model="max_price"
+                               placeholder="max">
+                    </div>
+                    <div class="col-1">
+                        <button @click="WarrantyCheck" class="btn btn-danger mb-2">Go</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="mt-3">
+                <h6>BRANDS</h6>
+                <div class="form-check mt-3" v-if="BrandInfoView.length" v-for="(brand, index) in BrandInfoView">
+                    <input class="form-check-input" type="checkbox" :id="brand.id" :value="brand.id"
+                           v-model="brand_list" @change="WarrantyCheck">
+                    <label class="form-check-label" for="defaultCheck1">
+                        ${ brand.name }
+                    </label>
+                </div>
+                <a @click="showMore" v-if="!readMore" style="cursor: pointer; color: tomato;">View All</a>
+                <a @click="showLess" v-if="readMore" style="cursor: pointer; color: tomato;">View Less</a>
+            </div>
+            <hr>
+            <div class="mt-3">
+                <h6>{{ category_data.name|upper }}</h6>
+                <div class="form-check mt-3" v-if="SubCategory.length" v-for="(sub_category, index) in SubCategory">
+                    <input class="form-check-input" type="checkbox" :id="sub_category.id" :value="sub_category.id"
+                           v-model="sub_category_list" @change="WarrantyCheck">
+                    <label class="form-check-label" for="defaultCheck1">
+                        ${ sub_category.name }
+                    </label>
+                </div>
+            </div>
+            <hr>
+            <div class="mt-3">
+                <h6>PRODUCT TYPE</h6>
+                <div class="form-check mt-3" v-if="ProductType.length" v-for="(product_type, index) in ProductType">
+                    <input class="form-check-input" type="checkbox" :id="product_type.id" :value="product_type.id"
+                           v-model="product_type_list" @change="WarrantyCheck">
+                    <label class="form-check-label" for="defaultCheck1">
+                        ${ product_type.name }
+                    </label>
+                </div>
+            </div>
+            <hr>
+            <div class="mt-3">
+                <h6>SELLER</h6>
+                <div class="form-check mt-3" v-if="SellerInfo.length" v-for="(seller, index) in SellerInfo">
+                    <input class="form-check-input" type="checkbox" :id="seller.id" :value="seller.id"
+                           v-model="seller_list" @change="WarrantyCheck">
+                    <label class="form-check-label" for="defaultCheck1">
+                        ${ seller.name }
+                    </label>
+                </div>
+            </div>
+            <hr>
+            <div class="mt-3">
+                <h6>WARRANTY PERIOD</h6>
+                <div class="form-check mt-3" v-if="WarrantyList.length" v-for="(warranty, index) in WarrantyList">
+                    <input class="form-check-input" type="checkbox" :id="warranty.id" :value="warranty.id"
+                           v-model="warrantyChecked" @change="WarrantyCheck">
+                    <label class="form-check-label" for="defaultCheck1">
+                        ${ warranty.name }
+                    </label>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <div class="container-fluid">
+                <h6 id="sidebarToggle"> {{ category_data.name|upper }} HAS ${ totalItems } PRODUCTS</h6>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                    <option selected>Sort By</option>
+                                </select>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container row">
+            <div class="card" style="width: 17rem;"  v-if="ProductInfo.length"
+                 v-for="(product, index) in ProductInfo">
+                <img :src="product.image" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5>
+                </div>
+                <ul class="list-group list-group-flush text-center">
+                    <h6 class="list-group-item"  style="cursor: pointer; color: tomato;">BDT ${product.discount_price}</h6>
+                    <h6 class="list-group-item"><del>BDT ${product.price}</del></h6>
+                </ul>
+                <div>
+                    <div class="row">
+                        <div class="col-4">
+                            <button type="button" class="btn btn-danger card-link">BUY NOW</button>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-dark card-link">ADD TO CART</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    new Vue({
+        el: '#product-list',
+        delimiters: ['${','}'],
+        data: {
+            WarrantyList: [],
+            ProductType: [],
+            BrandInfo: [],
+            BrandInfoView: [],
+            SellerInfo: [],
+            ProductInfo: [],
+            SubCategory: [],
+            warrantyChecked : [],
+            min_price: '',
+            max_price: '',
+            brand_list: [],
+            sub_category_list: [],
+            product_type_list: [],
+            seller_list: [],
+            readMore: false,
+            totalItems: 0,
+            category_slug: `{{ category_slug }}`,
+
+        },
+        mounted: function() {
+                this.getCategory();
+                console.log(this.warrantyChecked)
+        },
+        methods: {
+            showMore() {
+                this.readMore = true;
+                this.BrandInfoView = this.BrandInfo
+            },
+            showLess() {
+                this.readMore = false;
+                this.BrandInfoView = this.BrandInfo.slice(0,5)
+            },
+            async getCategory(){
+                console.log(this.category_slug)
+                await axios.get(`/api/category-filter/?category=${this.category_slug}`)
+                    .then(resp => {
+                        this.WarrantyList = resp.data.warranty
+                        this.ProductType = resp.data.product_type
+                        this.SellerInfo = resp.data.seller
+                        this.SubCategory = resp.data.sub_category
+                        this.BrandInfo = resp.data.brand
+                        this.ProductInfo = resp.data.product
+                        this.totalItems = resp.data.total_product
+                        if (!this.readMore){
+                            this.BrandInfoView = this.BrandInfo.slice(0,5)
+                        }
+
+                        console.log('WarrantyList = ', this.WarrantyList)
+                        console.log('ProductType = ', this.ProductType)
+                        console.log('SellerInfo = ', this.SellerInfo)
+                        console.log('SubCategory = ', this.SubCategory)
+                        console.log('BrandInfo = ', this.BrandInfo)
+                        console.log('ProductInfo = ', this.ProductInfo)
+                        console.log('totalItems = ', this.totalItems)
+                    })
+            },
+            WarrantyCheck() {
+              axios.get(`/api/product-filter/?category=${this.category_slug}&min_price=${this.min_price}&max_price=${this.max_price}&brand_list=${this.brand_list}&sub_category_list=${this.sub_category_list}&product_type_list=${this.product_type_list}&seller_list=${this.seller_list}&warranty_list=${this.warrantyChecked}`)
+              .then(resp => {
+                   console.log('results =', resp.data.results)
+                   this.ProductInfo = resp.data.results
+                   this.totalItems = resp.data.total_product
+                    console.log('totalItems = ', this.totalItems)
+               })
+            },
+
+        },
+    });
+
+
+</script>
+{% endblock custom_js %}
